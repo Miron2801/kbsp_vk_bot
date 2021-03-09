@@ -165,7 +165,8 @@ def form_keyboard2(user_id):
 	return keyboard
 
 def measure_temp():
-        temp = os.popen("vcgencmd measure_temp").readline()
+        temp = os.popen("vcgencmd measure_temp").readline() 
+        qwe = 1/0	
         return (temp.replace("temp=","Температура: "))
 
 
@@ -217,6 +218,7 @@ def worker_thread():
 			time.sleep(1)
 
 mythrd = threading.Thread(target=worker_thread, daemon=True)
+
 mythrd.start()
 
 
