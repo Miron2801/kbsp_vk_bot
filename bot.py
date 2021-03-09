@@ -29,7 +29,7 @@ vk_token_production        = secrets["vk_token_production"]
 vk_token_test   		   = secrets["vk_token_testing"]
 mysql_pass				   = secrets["mysql_pass"]
 beta_testers			   = secrets["betta_testers"]
-vk_session = vk_api.VkApi(token = vk_token_test)
+vk_session = vk_api.VkApi(token = vk_token_production)
 
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
@@ -114,6 +114,10 @@ def form_keyboard(user_id):
 	keyboard.add_line()
 	keyboard.add_button('Респект разрабу', color=VkKeyboardColor.POSITIVE)
 	keyboard.add_button('Сменить группу', color=VkKeyboardColor.PRIMARY)
+	keyboard.add_line()
+
+	keyboard.add_button('Настройки уведомлений', color=VkKeyboardColor.POSITIVE)
+
 	if(user_id in beta_testers):
 		keyboard.add_line()
 		keyboard.add_button('Настройки уведомлений', color=VkKeyboardColor.POSITIVE)
@@ -141,8 +145,7 @@ def update_group_to_notify(vk_id, group):
 		cur.execute("UPDATE `notification` SET `study_group` = '"+group+"' WHERE `notification`.`vk_id` = "+str(vk_id))
 		return cur.rowcount
 def form_keyboard_settings(user_id, buffer):
-	keyboard = VkKeyboard(one_time=False)
-	if(user_id in beta_testers):
+		keyboard = VkKeyboard(one_time=False)
 		if(buffer > 0):
 			keyboard.add_button('Выключить уведоления', color=VkKeyboardColor.NEGATIVE)
 		else:
@@ -151,7 +154,7 @@ def form_keyboard_settings(user_id, buffer):
 		keyboard.add_line()
 		keyboard.add_button('Назад', color=VkKeyboardColor.POSITIVE)		
 
-	return keyboard
+		return keyboard
 
 def form_keyboard2(user_id):
 	keyboard = VkKeyboard(one_time=True)
@@ -165,7 +168,8 @@ def form_keyboard2(user_id):
 	return keyboard
 
 def measure_temp():
-        temp = os.popen("vcgencmd measure_temp").readline()
+        temp = os.popen("vcgencmd measure_temp").readline() 
+        qwe = 1/0	
         return (temp.replace("temp=","Температура: "))
 
 
@@ -216,7 +220,7 @@ def worker_thread():
 			schedule.run_pending()
 			time.sleep(1)
 
-mythrd = threading.Thread(target=worker_thread)
+mythrd = threading.Thread(target=worker_thread, daemon=True)
 
 mythrd.start()
 
@@ -270,9 +274,7 @@ def message_parser(user_id,text,group):
 			v = '5.38'
 		)
 		return 0
-	elif text == "Настройки уведомлений":
-		if(user_id in beta_testers):
-			
+	elif text == "Настройки уведомлений":			
 			buffer = check_notifications_availible(user_id)
 
 			keyboard = form_keyboard_settings(user_id,buffer)
@@ -282,23 +284,12 @@ def message_parser(user_id,text,group):
 				message= "Вы в меню настройки уведомлений",
 				v = '5.38'
 			)
-		else:		
-			keyboard = form_keyboard(user_id)
-			one_day = timedelta(1) 
-			vk.messages.send( 
-				keyboard=keyboard.get_keyboard(),
-				user_id= user_id,
-				message= "Извините для вас пока эта функиця не доступна, в ближайшее время после бета теста она будет открыта! Следите за новостями",
-				v = '5.38'
-			)
 
 			return 0
 
 
 
 	elif text == "Включить уведоления":
-
-		if(user_id in beta_testers):
 				buffer = check_notifications_availible(user_id)
 				keyboard = form_keyboard_settings(user_id, buffer)
 
@@ -317,20 +308,8 @@ def message_parser(user_id,text,group):
 					v = '5.38'
 				)
 				return 0
-		else:		
-				keyboard = form_keyboard(user_id)
-				one_day = timedelta(1) 
-				vk.messages.send( 
-					keyboard=keyboard.get_keyboard(),
-					user_id= user_id,
-					message= "Извините для вас пока эта функиця не доступна, в ближайшее время после бета теста она будет открыта! Следите за новостями",
-					v = '5.38'
-				)
-
-				return 0
 	elif text == "Выключить уведоления":
 
-		if(user_id in beta_testers):
 				buffer = check_notifications_availible(user_id)
 
 				if(buffer == 0):
@@ -346,19 +325,8 @@ def message_parser(user_id,text,group):
 					message= "ok",
 					v = '5.38'
 				)
-		else:		
-				keyboard = form_keyboard(user_id)
-				one_day = timedelta(1) 
-				vk.messages.send( 
-					keyboard=keyboard.get_keyboard(),
-					user_id= user_id,
-					message= "Извините для вас пока эта функиця не доступна, в ближайшее время после бета теста она будет открыта! Следите за новостями",
-					v = '5.38'
-				)
-
 				return 0
 	elif text == "Назад":
-		if(user_id in beta_testers):
 			keyboard = form_keyboard(user_id)
 			vk.messages.send( 
 				keyboard=keyboard.get_keyboard(),
@@ -366,15 +334,7 @@ def message_parser(user_id,text,group):
 				message= "Ok",
 				v = '5.38'
 			)
-		else:		
-			keyboard = form_keyboard(user_id)
-			vk.messages.send( 
-				keyboard=keyboard.get_keyboard(),
-				user_id= user_id,
-				message= "Извините для вас пока эта функиця не доступна, в ближайшее время после бета теста она будет открыта! Следите за новостями",
-				v = '5.38'
-			)
-
+			stage[user_id] = 0
 			return 0
 	if(text[0:10] == "Расписание" or text[0:10] == "расписание" ):
 				keyboard = form_keyboard(user_id)
