@@ -120,7 +120,6 @@ def form_keyboard(user_id):
 
 	if(user_id in beta_testers):
 		keyboard.add_line()
-		keyboard.add_button('Настройки уведомлений', color=VkKeyboardColor.POSITIVE)
 		#keyboard.add_button('Какая сейчас пара по счету?', color=VkKeyboardColor.POSITIVE)
 		keyboard.add_button('Системные операции', color=VkKeyboardColor.POSITIVE)
 	return keyboard
