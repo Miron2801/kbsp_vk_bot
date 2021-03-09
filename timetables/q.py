@@ -29,7 +29,7 @@ out_red("Загрузка расписания с офф сайта МИРЭА")
 print("")
 os.system("rm table.xlsx")
 
-os.system("wget -O table.xlsx https://webservices.mirea.ru/upload/iblock/1b2/%D0%9A%D0%91%D0%B8%D0%A1%D0%9F%201%20%D0%BA%D1%83%D1%80%D1%81%202%20%D1%81%D0%B5%D0%BC-%D0%94.xlsx")
+os.system("wget -O table.xlsx https://webservices.mirea.ru/upload/iblock/f45/%D0%9A%D0%91%D0%B8%D0%A1%D0%9F%201%20%D0%BA%D1%83%D1%80%D1%81%202%20%D1%81%D0%B5%D0%BC-%D0%94.xlsx")
 out_red("Завершено!")
 
 wb = load_workbook('table.xlsx')

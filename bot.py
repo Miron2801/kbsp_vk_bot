@@ -29,7 +29,7 @@ vk_token_production        = secrets["vk_token_production"]
 vk_token_test   		   = secrets["vk_token_testing"]
 mysql_pass				   = secrets["mysql_pass"]
 beta_testers			   = secrets["betta_testers"]
-vk_session = vk_api.VkApi(token = vk_token_test)
+vk_session = vk_api.VkApi(token = vk_token_production)
 
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
@@ -216,8 +216,7 @@ def worker_thread():
 			schedule.run_pending()
 			time.sleep(1)
 
-mythrd = threading.Thread(target=worker_thread)
-
+mythrd = threading.Thread(target=worker_thread, daemon=True)
 mythrd.start()
 
 
