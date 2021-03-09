@@ -1,0 +1,6 @@
+secrets.json
+*__pycache__
+*.log
+.secrets.json.swp
+table.xlsx
+
