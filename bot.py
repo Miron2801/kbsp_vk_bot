@@ -15,14 +15,14 @@ import schedule
 beta_testers = []
 banned_users = []
 groups = ["ББСО-04-20"]
-mysql_user = "Miron_root"
+mysql_user = "miron_root"
 mysql_pass = ""
 spec = "§1"
 
 bot_stat = 1
 Main_prefix = "timetables/tests/"
 
-secrets = staff_functions.load_json("secrets.json")
+secrets = staff_functions.load_json("/secrets.json")
 
 mysql_pass      		   = secrets["mysql_pass"]
 vk_token_production        = secrets["vk_token_production"]
