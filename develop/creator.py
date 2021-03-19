@@ -41,11 +41,11 @@ def make_json(name_file,massiv):
 	    json.dump(massiv, fw)
 	return os.path.getsize(name_file) / 1000000
 def out_red(text):
-    print("\033[31m {}" .format(text))
+    print("\033[31m {} \033[0m " .format(text))
 def out_yellow(text):
-    print("\033[33m {}" .format(text))
+    print("\033[33m {} \033[0m " .format(text))
 def out_blue(text):
-    print("\033[34m {}" .format(text))
+    print("\033[34m {} \033[0m " .format(text))
 
 out_red("Python 3.0 addon for vk bot 'Рапсписание КБСП' for online parsing http://mirea.ru")
 time.sleep(1)
