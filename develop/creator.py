@@ -85,7 +85,7 @@ out_yellow("создание prefix.json")
 
 for i in range(len(mass3)):
 			mass_prefix.append(mass3[i]["group"])
-make_json("prefix.json",mass_prefix)
+make_json("../timetables/tests/prefix.json",mass_prefix)
 #print(mass3)
 #print(len(mass3))
 if(len(mass_prefix) != len(mass3)):
