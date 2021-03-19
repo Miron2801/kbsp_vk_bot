@@ -3,4 +3,4 @@ secrets.json
 *.log
 .secrets.json.swp
 table.xlsx
-
+*.swp
