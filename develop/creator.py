@@ -54,7 +54,6 @@ def md5summ(filename):
 	return hashlib.md5(open(filename, 'rb').read()).hexdigest()
 
 out_red("Загрузка расписания с офф сайта МИРЭА")
-print("")
 os.system("rm table.xlsx")
 
 os.system("wget -O table.xlsx '"+str(get_1_coure_url())+"'")
@@ -116,14 +115,12 @@ def makeJSON_RASP(week,mass,prefix):
 			num_par = sheet['FZ'+str(i-week)].value #это не трогать работает
 			if q == 12:
 				q = 0
-#				print("-----------------------------------")
 				day = day + 1
 			if i % 2 == week:
 
 				if(str(sheet[column_lesson+str(i)].value) == "None"):
-					o=1
+					pass
 				else:
-#					print(num_par, "   ", str(sheet[column_lesson+str(i)].value).replace("\n", " "), "     ", sheet[colum_type+str(i)].value, "     ", str(sheet[colum_fio+str(i)].value).replace("\n", " "), "   ", str(sheet[colum_aud+str(i)].value).replace("\n", " "))
 					buffer = {}
 					buffer["num_para"] = str(num_par)
 					buffer["para"] = str(sheet[column_lesson+str(i)].value).replace("\n", " ")
@@ -132,24 +129,18 @@ def makeJSON_RASP(week,mass,prefix):
 					buffer["aud"]  = str(sheet[colum_aud+str(i)].value).replace("\n", " ")
 					mass1[day].append(buffer)
 			q +=1
-#		filemd5 = md5summ(prefix+"/nechet.json")
 		if (week == 0):
-			os.system("sudo mkdir -p " + prefix)
-			os.system("sudo chmod 777 "+prefix + "/")
-			make_json(prefix+"/nechet.json",mass1)
+			os.system("sudo mkdir -p ../timetables/tests/" + prefix)
+			os.system("sudo chmod 777 ../timetables/tests/"+prefix + "/")
+			make_json("../timetables/tests/"+prefix+"/nechet.json",mass1)
 			out_blue("Сохранено нечетное расписание для группы " + str(prefix) + " по пути " + str(prefix) + "/nechet.json")
 			print("=======================================")
 		else:
-			os.system("sudo mkdir -p " + prefix)
-			os.system("sudo chmod 777 "+prefix + "/")
-			make_json(prefix+"/chet.json",mass1)
+			os.system("sudo mkdir -p ../timetables/tests/" + prefix)
+			os.system("sudo chmod 777 ../timetables/tests/"+prefix + "/")
+			make_json("../timetables/tests/"+prefix+"/chet.json",mass1)
 			out_blue("Сохранено четное расписание для группы " + str(prefix) + " по пути " + str(prefix) + "/chet.json")
 			print("=======================================")
-#		if (md5summ(prefix+"/chet.json") == filemd5):
-#					out_yellow("Расписание группы: "+prefix+" не изменено")
-#		else:
-#					out_red("Расписание группы: "+prefix+" изменилось")
-#					print(filemd5 + " " + md5summ(prefix+"/chet.json"))
 		q = 0
 		w = 0
 		num_par =0
