@@ -7,6 +7,13 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
+import datetime
+now = datetime.datetime.now()
+f = open("log.log", "w")
+f.write("===========================================================\n")
+f.write(str(now) + " >> Skipt restarted by user\n")
+f.close()
 
 def search_kbsp():
         mass = []
