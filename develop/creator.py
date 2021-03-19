@@ -10,7 +10,7 @@ import pandas as pd
 import os
 import datetime
 now = datetime.datetime.now()
-f = open("log.log", "w")
+f = open("log.log", "a")
 f.write("===========================================================\n")
 f.write(str(now) + " >> Skipt restarted by user\n")
 f.close()
