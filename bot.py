@@ -196,7 +196,7 @@ def timetablesender_thread():
 				print("sended rasp")
 				con = pymysql.connect('localhost', mysql_user, mysql_pass, 'timetable', autocommit=True)
 				cur = con.cursor()
-				cur.execute("SELECT * FROM `notification` WHERE `is_notifications_assepted` = 1")
+				cur.execute("SELECT * FROM `notification` WHERE `is_notifications_assepted` = 1 AND `study_group` != ''")
 				rows = cur.fetchall()
 				for i in rows:
 					keyboard = form_keyboard(i[1])
