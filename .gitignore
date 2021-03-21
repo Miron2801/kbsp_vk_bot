@@ -5,3 +5,4 @@ secrets.json
 table.xlsx
 *.swp
 *.save
+T*.sql
