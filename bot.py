@@ -94,6 +94,7 @@ def make_timetable(date, group):
 				else:	
 					if	(timetable[day][i]["para"][0].isdigit()):
 						weeks = timetable[day][i]["para"][0:len(timetable[day][i]["para"])][0:timetable[day][i]["para"][0:len(timetable[day][i]["para"])].find("н") -1].split(",")
+						
 						if(str(nowweek) in weeks):
 							weeks = []
 							timetable[day][i]["para"] = timetable[day][i]["para"].replace(timetable[day][i]["para"][0:timetable[day][i]["para"].find("н")+2],"")							
