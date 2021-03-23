@@ -6,3 +6,4 @@ table.xlsx
 *.swp
 *.save
 T*.sql
+*.pyc
