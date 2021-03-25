@@ -29,7 +29,7 @@ vk_token_production        = secrets["vk_token_production"]
 vk_token_test   		   = secrets["vk_token_testing"]
 mysql_pass				   = secrets["mysql_pass"]
 beta_testers			   = secrets["betta_testers"]
-vk_session = vk_api.VkApi(token = vk_token_production)
+vk_session = vk_api.VkApi(token = vk_token_test)
 
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
@@ -72,6 +72,7 @@ def get_week_by_day(date1):
 def make_timetable(date, group):
 	nowweek = get_week_by_day(date)
 	day = date.isoweekday()
+	paras_1 = []
 	if(nowweek % 2 == 0):
 		timetable = staff_functions.load_json(Main_prefix+str(group)+"/chet.json")
 	else:
@@ -83,7 +84,6 @@ def make_timetable(date, group):
 		return frase_for_vs
 	try:
 		for i in range(len(timetable[day])):
-				print(timetable[day][i]["para"])
 				if(timetable[day][i]["para"][0:3] == "кр "):
 						weeks = timetable[day][i]["para"][3:len(timetable[day][i]["para"])][0:timetable[day][i]["para"][3:len(timetable[day][i]["para"])].find("н") - 1].split(",")
 						if(not(str(nowweek) in weeks)):
@@ -101,6 +101,7 @@ def make_timetable(date, group):
 						else:
 							weeks = []
 							continue
+				paras_1.append(timetable[day][i]["num_para"])
 				ret_str += timetable[day][i]["num_para"] + " пара " + staff_functions.int_to_timepar(int(timetable[day][i]["num_para"])) 
 				ret_str += timetable[day][i]["para"] + " "
 				if(timetable[day][i]["type"] != "None"):
@@ -123,7 +124,35 @@ def make_timetable(date, group):
 						ret_str += timetable[day][i]["aud"] + "\n"
 	except Exception:
 		ret_str = "Произошла ошибка сообщи разработчику"
-	return ret_str
+	return [ret_str, paras_1]
+def get_paras_by_group(date, group):
+	return make_timetable(date,group)[1]
+
+print(get_paras_by_group(datetime.datetime.today(),"ББСО-04-20"))
+def get_now_para(date, group):
+	current_time = datetime.datetime.now().hour,datetime.datetime.now().minute
+	minutes_from00 = current_time[0]*60 + current_time[1]
+	print (minutes_from00)
+	print(current_time)
+	paras = get_paras_by_group(date,group)
+	print(paras)
+	#minutes_from00 = 555#ifxme
+	for i in paras:
+			current_time_para = staff_functions.get_start_para(i).split(":"), staff_functions.get_end_para(i).split(":")
+			minutes_current_time_para_start = int(current_time_para[0][0])*60 + int(current_time_para[0][1])
+			minutes_current_time_para_stop= int(current_time_para[1][0])*60 + int(current_time_para[1][1])
+			time_paras = [minutes_current_time_para_start,minutes_current_time_para_stop]
+			if(time_paras[0] <minutes_from00 < time_paras[1]):
+				return "сейчас " + str(i) + " пара"
+				
+			if(minutes_from00 < 540):
+				return "До начала 1 пары: " + str(540 - minutes_from00)
+			if(minutes_from00 > 1170):
+				return "На сегодня пары закончились"	
+			print(current_time_para)
+			print(time_paras)
+			
+print(get_now_para(datetime.datetime.today(),"ББСО-04-20"))
 
 def get_empty_keyboard():
 	keyboard = VkKeyboard(one_time=False)
@@ -291,7 +320,7 @@ def message_parser(user_id,text,group):
 		vk.messages.send( 
 			keyboard=keyboard.get_keyboard(),
 			user_id= user_id,
-			message= make_timetable(datetime.datetime.today()+one_day,group),
+			message= make_timetable(datetime.datetime.today()+one_day,group)[0],
 			v = '5.38'
 		)
 		return 0
@@ -305,7 +334,6 @@ def message_parser(user_id,text,group):
 				message= "Вы в меню настройки уведомлений",
 				v = '5.38'
 			)
-
 			return 0
 
 
@@ -365,7 +393,7 @@ def message_parser(user_id,text,group):
 						vk.messages.send( 
                                         keyboard=keyboard.get_keyboard(),
                                         user_id= user_id,
-                                        message= make_timetable(datetime.datetime.today(),group),
+                                        message= make_timetable(datetime.datetime.today(),group)[0],
                                         v = '5.38'
                         )
 						return 0
@@ -373,7 +401,7 @@ def message_parser(user_id,text,group):
 					vk.messages.send( 
                     	    keyboard=keyboard.get_keyboard(),
                         	user_id= user_id,
-                        	message= make_timetable(datetime.datetime(2021, int(qwe[1]), int(qwe[0]), 10, 32), group),
+                        	message= make_timetable(datetime.datetime(2021, int(qwe[1]), int(qwe[0]), 10, 32), group)[0],
                         	v = '5.38'
 					)
 				except:
