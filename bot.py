@@ -128,32 +128,29 @@ def make_timetable(date, group):
 def get_paras_by_group(date, group):
 	return make_timetable(date,group)[1]
 
-print(get_paras_by_group(datetime.datetime.today(),"ББСО-04-20"))
+#print(get_paras_by_group(datetime.datetime.today(),"ББСО-04-20"))
 def get_now_para(date, group):
 	current_time = datetime.datetime.now().hour,datetime.datetime.now().minute
 	minutes_from00 = current_time[0]*60 + current_time[1]
-	print (minutes_from00)
-	print(current_time)
-	paras = get_paras_by_group(date,group)
-	print(paras)
-	#minutes_from00 = 555#ifxme
-	for i in paras:
+	paras_rasp = get_paras_by_group(date,group)
+	time_paras = []
+	for i in paras_rasp:
 			current_time_para = staff_functions.get_start_para(i).split(":"), staff_functions.get_end_para(i).split(":")
 			minutes_current_time_para_start = int(current_time_para[0][0])*60 + int(current_time_para[0][1])
 			minutes_current_time_para_stop= int(current_time_para[1][0])*60 + int(current_time_para[1][1])
-			time_paras = [minutes_current_time_para_start,minutes_current_time_para_stop]
-			if(time_paras[0] <minutes_from00 < time_paras[1]):
-				return "сейчас " + str(i) + " пара"
-				
-			if(minutes_from00 < 540):
-				return "До начала 1 пары: " + str(540 - minutes_from00)
-			if(minutes_from00 > 1170):
-				return "На сегодня пары закончились"	
-			print(current_time_para)
-			print(time_paras)
-			
-print(get_now_para(datetime.datetime.today(),"ББСО-04-20"))
+			time_para = [minutes_current_time_para_start,minutes_current_time_para_stop]
+			time_paras.append(time_para)
 
+	if( minutes_from00 < time_paras[0][0]):
+		return "До начала пар : " + str(time_paras[0][0] - minutes_from00)
+	if( minutes_from00 > time_paras[len(time_paras)-1][1]):
+		return "Пары закончились"
+
+	for i in range(len(time_paras)):
+				if(time_paras[i][0] <= minutes_from00 <= time_paras[i][1]):
+					return "Сейчас идет: " + str(paras_rasp[i]) + " пара.\nДо ее конца: " + str(time_paras[i][1] - minutes_from00) +" минут."
+	return "Сейчас перемена"
+			
 def get_empty_keyboard():
 	keyboard = VkKeyboard(one_time=False)
 	return keyboard
@@ -161,18 +158,21 @@ def get_empty_keyboard():
 def form_keyboard(user_id):
 	keyboard = VkKeyboard(one_time=False)
 	keyboard.add_button('Расписание', color=VkKeyboardColor.PRIMARY)
-	keyboard.add_line()
+	#keyboard.add_line()
 	keyboard.add_button('Расписание на завтра', color=VkKeyboardColor.PRIMARY)
 	keyboard.add_line()
-	keyboard.add_button('Респект разрабу', color=VkKeyboardColor.POSITIVE)
+	keyboard.add_button('Какая сейчас пара по счету?', color=VkKeyboardColor.PRIMARY)
+	keyboard.add_line()
+
 	keyboard.add_button('Сменить группу', color=VkKeyboardColor.PRIMARY)
+	keyboard.add_button('Респект разрабу', color=VkKeyboardColor.POSITIVE)
+
 	keyboard.add_line()
 
 	keyboard.add_button('Настройки уведомлений', color=VkKeyboardColor.POSITIVE)
 
 	if(user_id in beta_testers):
 		keyboard.add_line()
-		#keyboard.add_button('Какая сейчас пара по счету?', color=VkKeyboardColor.POSITIVE)
 		keyboard.add_button('Системные операции', color=VkKeyboardColor.POSITIVE)
 	return keyboard
 def check_notifications_availible(vk_id): 
@@ -434,15 +434,6 @@ def message_parser(user_id,text,group):
 					v = '5.38'
 				)
 		return 0
-	elif text == "Сколько до пары?":
-		keyboard = form_keyboard(user_id)
-		vk.messages.send( 
-			keyboard=keyboard.get_keyboard(),
-			user_id= user_id,
-			message= "не реализовано рефакторинг кода",
-			v = '5.38'
-		)
-		return 0
 	elif text == "Saved":
 			keyboard = form_keyboard(user_id)
 			attach = ["photo-132646282_457281177", "photo-132646282_457277120","photo-183914844_457242562","photo-183914844_457241071"]
@@ -479,7 +470,7 @@ def message_parser(user_id,text,group):
 		vk.messages.send(
 			keyboard=keyboard.get_keyboard(),
 			user_id= user_id,
-			message= "не реализовано рефакторинг кода",
+			message= get_now_para(datetime.datetime.today(),group),
 			v = '5.38'
 		)
 		return 0
