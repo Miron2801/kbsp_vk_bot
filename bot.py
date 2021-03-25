@@ -73,10 +73,8 @@ def make_timetable(date, group):
 	nowweek = get_week_by_day(date)
 	day = date.isoweekday()
 	if(nowweek % 2 == 0):
-	#	staff_functions.out_yellow("Запрос на четное расписание")
 		timetable = staff_functions.load_json(Main_prefix+str(group)+"/chet.json")
 	else:
-	#	staff_functions.out_yellow("Запрос на нечетное расписание")
 		timetable = staff_functions.load_json(Main_prefix+str(group)+"/nechet.json")
 	ret_str = ""
 	ret_str = "Расписание для группы: "+group+" \n"+staff_functions.int_to_day(date.isoweekday())+ " " + str(date.day)+" "+ staff_functions.int_to_mounth(date.month) +" \nТекущая неделя: "+str(nowweek) + "\n\n"
@@ -85,10 +83,35 @@ def make_timetable(date, group):
 		return frase_for_vs
 	try:
 		for i in range(len(timetable[day])):
+				print(timetable[day][i]["para"])
+				if(timetable[day][i]["para"][0:3] == "кр "):
+						weeks = timetable[day][i]["para"][3:len(timetable[day][i]["para"])][0:timetable[day][i]["para"][3:len(timetable[day][i]["para"])].find("н") - 1].split(",")
+						if(not(str(nowweek) in weeks)):
+							weeks = []
+							timetable[day][i]["para"] = timetable[day][i]["para"].replace(timetable[day][i]["para"][0:timetable[day][i]["para"].find("н")+2],"")
+						else:
+							continue
+				else:	
+					if	(timetable[day][i]["para"][0].isdigit()):
+						weeks = timetable[day][i]["para"][0:len(timetable[day][i]["para"])][0:timetable[day][i]["para"][0:len(timetable[day][i]["para"])].find("н") -1].split(",")
+						
+						if(str(nowweek) in weeks):
+							weeks = []
+							timetable[day][i]["para"] = timetable[day][i]["para"].replace(timetable[day][i]["para"][0:timetable[day][i]["para"].find("н")+2],"")							
+						else:
+							weeks = []
+							continue
 				ret_str += timetable[day][i]["num_para"] + " пара " + staff_functions.int_to_timepar(int(timetable[day][i]["num_para"])) 
 				ret_str += timetable[day][i]["para"] + " "
 				if(timetable[day][i]["type"] != "None"):
-					ret_str += timetable[day][i]["type"] + " "
+					if (timetable[day][i]["type"] == "лр"):
+						ret_str += "лаба" + " "
+					elif timetable[day][i]["type"] == "пр":
+						ret_str += "практика" + " "	
+					elif timetable[day][i]["type"] == "лек":
+						ret_str += "лекция" + " "
+					else:
+						ret_str += timetable[day][i]["type"] + " "
 				if(timetable[day][i]["fio"] != "None"):
 					ret_str += timetable[day][i]["fio"] + " "
 				if(timetable[day][i]["aud"] == "Д"):
@@ -99,7 +122,7 @@ def make_timetable(date, group):
 					else:
 						ret_str += timetable[day][i]["aud"] + "\n"
 	except Exception:
-		ret_str = "какая то неведомая херь скажи разрабу"
+		ret_str = "Произошла ошибка сообщи разработчику"
 	return ret_str
 
 def get_empty_keyboard():
