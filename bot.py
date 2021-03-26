@@ -29,7 +29,7 @@ vk_token_production        = secrets["vk_token_production"]
 vk_token_test   		   = secrets["vk_token_testing"]
 mysql_pass				   = secrets["mysql_pass"]
 beta_testers			   = secrets["betta_testers"]
-vk_session = vk_api.VkApi(token = vk_token_test)
+vk_session = vk_api.VkApi(token = vk_token_production)
 
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
@@ -142,7 +142,7 @@ def get_now_para(date, group):
 			time_paras.append(time_para)
 
 	if( minutes_from00 < time_paras[0][0]):
-		return "До начала пар : " + str(time_paras[0][0] - minutes_from00)
+		return "До начала пар : " + str(time_paras[0][0] - minutes_from00) + " минут."
 	if( minutes_from00 > time_paras[len(time_paras)-1][1]):
 		return "Пары закончились"
 
