@@ -81,7 +81,7 @@ def make_timetable(date, group):
 	ret_str = "Расписание для группы: "+group+" \n"+staff_functions.int_to_day(date.isoweekday())+ " " + str(date.day)+" "+ staff_functions.int_to_mounth(date.month) +" \nТекущая неделя: "+str(nowweek) + "\n\n"
 	day = date.isoweekday()
 	if (day ==7):
-		return frase_for_vs
+		return [frase_for_vs,[]]
 	try:
 		for i in range(len(timetable[day])):
 				if(timetable[day][i]["para"][0:3] == "кр "):
