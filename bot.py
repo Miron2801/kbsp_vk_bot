@@ -92,9 +92,8 @@ def make_timetable(date, group):
 						else:
 							continue
 				else:	
-					if	(timetable[day][i]["para"][0].isdigit()):
+					if(timetable[day][i]["para"][0].isdigit() or timetable[day][i]["para"][1].isdigit()):
 						weeks = timetable[day][i]["para"][0:len(timetable[day][i]["para"])][0:timetable[day][i]["para"][0:len(timetable[day][i]["para"])].find("н") -1].split(",")
-						
 						if(str(nowweek) in weeks):
 							weeks = []
 							timetable[day][i]["para"] = timetable[day][i]["para"].replace(timetable[day][i]["para"][0:timetable[day][i]["para"].find("н")+2],"")							
@@ -126,13 +125,16 @@ def make_timetable(date, group):
 		ret_str = "Произошла ошибка сообщи разработчику"
 	return [ret_str, paras_1]
 def get_paras_by_group(date, group):
-	return make_timetable(date,group)[1]
+	return make_timetable(date,group)
 
 #print(get_paras_by_group(datetime.datetime.today(),"ББСО-04-20"))
 def get_now_para(date, group):
 	current_time = datetime.datetime.now().hour,datetime.datetime.now().minute
 	minutes_from00 = current_time[0]*60 + current_time[1]
-	paras_rasp = get_paras_by_group(date,group)
+	paras_rasp_1 = get_paras_by_group(date,group)
+	paras_rasp = paras_rasp_1[1]
+	if(paras_rasp[1] == []):
+		return "Нет пар."
 	time_paras = []
 	for i in paras_rasp:
 			current_time_para = staff_functions.get_start_para(i).split(":"), staff_functions.get_end_para(i).split(":")
