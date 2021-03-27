@@ -42,7 +42,7 @@ staff_functions.out_red("Запуск")
 banned_users = staff_functions.load_json("banned.json")
 prefix = staff_functions.load_json(Main_prefix+"prefix.json")
 
-frase_for_vs = "Это воскресенье, Карл, воскресенье отдыхай"
+frase_for_vs = "Это воскресенье, отдыхай"
 
 
 
