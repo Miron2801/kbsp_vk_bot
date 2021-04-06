@@ -132,9 +132,9 @@ def get_now_para(date, group):
 	current_time = datetime.datetime.now().hour,datetime.datetime.now().minute
 	minutes_from00 = current_time[0]*60 + current_time[1]
 	paras_rasp_1 = get_paras_by_group(date,group)
-	paras_rasp = paras_rasp_1[1]
-	if(paras_rasp[1] == []):
+	if(paras_rasp_1[1] == []):
 		return "Нет пар."
+	paras_rasp = paras_rasp_1[1]
 	time_paras = []
 	for i in paras_rasp:
 			current_time_para = staff_functions.get_start_para(i).split(":"), staff_functions.get_end_para(i).split(":")
@@ -256,7 +256,7 @@ def timetablesender_thread():
 					keyboard = form_keyboard(i[1])
 					one_day = timedelta(1) 
 					
-					buffer = make_timetable(datetime.datetime.today()+one_day,i[3])
+					buffer = make_timetable(datetime.datetime.today()+one_day,i[3])[0]
 					
 					if(buffer == frase_for_vs):
 						break
