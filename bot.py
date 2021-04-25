@@ -114,6 +114,10 @@ def make_timetable(date, group):
 						ret_str += timetable[day][i]["type"] + " "
 				if(timetable[day][i]["fio"] != "None"):
 					ret_str += timetable[day][i]["fio"] + " "
+				if(timetable[day][i]["fio"] == "Катышев В.В." and group == "БББО-09-20"):
+
+                                        ret_str += timetable[day][i]["fio"] + " (Пасхалочка: Лучше не приходите [P.S. Admin loves our group]) "
+
 				if(timetable[day][i]["aud"] == "Д"):
 					ret_str += "Дистант" + " \n"
 				else:	
