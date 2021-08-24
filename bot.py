@@ -60,9 +60,9 @@ def get_rand_message(name):
 		con.close()
 		return message
 def get_week_by_day(date1):
-	startingweek = datetime.date(2021, 2, 7)
+	startingweek = datetime.date(2021, 8, 1)
 	stopingweek = date1.date()
-	#stopingweek = datetime.date(2020, 11, 9)
+	#stopingweek = datetime.date(2021, 8, 1)
 	delta = (stopingweek-startingweek).days/7
 	if(delta == math.ceil(delta)):
 		return math.ceil(delta) + 1
@@ -71,6 +71,7 @@ def get_week_by_day(date1):
 
 def make_timetable(date, group):
 	nowweek = get_week_by_day(date)
+	#date = datetime.date(2021, 8, 1)
 	day = date.isoweekday()
 	paras_1 = []
 	if(nowweek % 2 == 0):
@@ -285,6 +286,7 @@ mythrd.start()
 
 
 stage = {}
+betta_test = 1
 def message_parser(user_id,text,group):
 	try:
 			if(stage[user_id] == 1):
@@ -302,6 +304,18 @@ def message_parser(user_id,text,group):
 					turn_off_notifiactions(user_id)
 	except:
 		pass
+	if(betta_test):
+		if(user_id in beta_testers):
+			pass
+		else:
+			keyboard = form_keyboard(user_id)
+			vk.messages.send(
+				keyboard=keyboard.get_keyboard(),
+				user_id= user_id,
+				message= "Привет! Бот включен, но разработчик производит тестирование",
+				v = '5.38'
+			)
+			return 0
 	if(text == "Начать" or text == "начать"):
 		keyboard = form_keyboard(user_id)
 		vk.messages.send( 
@@ -603,7 +617,6 @@ if(bot_stat == 1):
 	for event in longpoll.listen():
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
 			if event.from_user: 
-
 				if(event.user_id in banned_users):
 					send_you_are_banned(event.user_id)
 					print("пишет забаненный:"+str(event.user_id))

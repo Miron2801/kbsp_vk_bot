@@ -38,7 +38,7 @@ def get_1_coure_url():
 week = 0
 def make_json(name_file,massiv):
 	with open(name_file, 'w') as fw:
-	    json.dump(massiv, fw)
+	    json.dump(massiv, fw, ensure_ascii=False)
 	return os.path.getsize(name_file) / 1000000
 def out_red(text):
     print("\033[31m {} \033[0m " .format(text))
@@ -89,9 +89,12 @@ for i in range(1,sheet.max_column):
 			pass
 mass_prefix = []
 out_yellow("создание prefix.json")
+mass_prefix = load_json("../timetables/tests/prefix.json")
 
 for i in range(len(mass3)):
-			mass_prefix.append(mass3[i]["group"])
+			if(not(mass3[i]["group"] in mass_prefix)):
+				mass_prefix.append(mass3[i]["group"])
+
 make_json("../timetables/tests/prefix.json",mass_prefix)
 #print(mass3)
 #print(len(mass3))
