@@ -617,6 +617,7 @@ if(bot_stat == 1):
 	for event in longpoll.listen():
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
 			if event.from_user: 
+				start_time = datetime.datetime.now()
 				if(event.user_id in banned_users):
 					send_you_are_banned(event.user_id)
 					print("пишет забаненный:"+str(event.user_id))
@@ -627,6 +628,7 @@ if(bot_stat == 1):
 						new_user(event.user_id,event.text)
 					else:
 						message_parser(event.user_id , event.text,user_q[1])
+				staff_functions.out_blue("Время выполнения: " + str(datetime.datetime.now() - start_time))
 			elif event.from_chat:
 				print("Сообщение из чата "+event.event.chat_id + "  " + event.text)
 
