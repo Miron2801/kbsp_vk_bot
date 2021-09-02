@@ -60,7 +60,7 @@ def get_rand_message(name):
 		con.close()
 		return message
 def get_week_by_day(date1):
-	startingweek = datetime.date(2021, 8, 1)
+	startingweek = datetime.date(2021, 8, 30)
 	stopingweek = date1.date()
 	#stopingweek = datetime.date(2021, 8, 1)
 	delta = (stopingweek-startingweek).days/7
@@ -68,7 +68,12 @@ def get_week_by_day(date1):
 		return math.ceil(delta) + 1
 	if(math.ceil(delta) -1 < delta <=math.ceil(delta)):
 		return math.ceil(delta)
-
+def find_first_int(str):
+	for i in range(len(str)):
+		if( str[i].isdigit() ):
+				return i
+	return -1
+		
 def make_timetable(date, group):
 	nowweek = get_week_by_day(date)
 	#date = datetime.date(2021, 8, 1)
@@ -101,6 +106,20 @@ def make_timetable(date, group):
 						else:
 							weeks = []
 							continue
+					if(timetable[day][i]["para"][ len(timetable[day][i]["para"])-1 ] == "н" and timetable[day][i]["para"][ len(timetable[day][i]["para"]) - 2 ] == " "):
+							staff_functions.out_red("Сработало условие")
+							_buffer = find_first_int(timetable[day][i]["para"])
+							_weeks_str = []
+							if(_buffer > 0):
+									print(timetable[day][i]["para"][_buffer:len(timetable[day][i]["para"])])
+									_weeks_str = timetable[day][i]["para"][_buffer:len(timetable[day][i]["para"])].replace(" н", "").split(",")
+									print(_weeks_str)
+							if(str(nowweek) in _weeks_str):
+								weeks = []
+								timetable[day][i]["para"] = timetable[day][i]["para"][0:find_first_int(timetable[day][i]["para"])-1]							
+							else:
+								weeks = []
+								continue
 				paras_1.append(timetable[day][i]["num_para"])
 				ret_str += timetable[day][i]["num_para"] + " пара " + staff_functions.int_to_timepar(int(timetable[day][i]["num_para"])) 
 				ret_str += timetable[day][i]["para"] + " "
@@ -286,7 +305,7 @@ mythrd.start()
 
 
 stage = {}
-betta_test = 1
+betta_test = 0
 def message_parser(user_id,text,group):
 	try:
 			if(stage[user_id] == 1):

@@ -9,12 +9,13 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 import datetime
+import sys
 now = datetime.datetime.now()
 f = open("log.log", "a")
 f.write("===========================================================\n")
 f.write(str(now) + " >> Skipt restarted by user\n")
 f.close()
-
+print(sys.argv[1])
 def search_kbsp():
         mass = []
         url = "https://www.mirea.ru/schedule/"
@@ -31,7 +32,7 @@ def search_kbsp():
 def get_1_coure_url():
 	kbsp_searcher = search_kbsp()
 	for i in kbsp_searcher:
-			if i.find("КБиСП 1") > 0 and i.find("магистры") == -1:
+			if i.find("КБиСП "+str(sys.argv[1])) > 0 and i.find("магистры") == -1:
 				print(i)
 				return i
 
